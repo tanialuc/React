@@ -12,14 +12,55 @@
         text-align: center;
         width: 100px;
       }
+
+      picture.is-small {
+        width: 50px;
+      }
+
+      picture.is-large {
+        width: 150px;
+      }
+
       img {
         box-shadow: 0 0 15px #999;
         border-radius: 50%;
-        width: 100px;
+        width: 100%;
       }
 
       img.disabled {
         opacity: 0.3;
+      }
+
+      i {
+        align-content: center;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        display: flex;
+        direction: column;
+        justify-content: center;
+        min-height: 50 px;
+        display: block;
+        width: 100%;
+      }
+
+      div {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        font-size: 24px;
+      }
+
+      button {
+        margin: 5px;
+        text-decoration: none;
+        padding: 3px;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-weight: 300;
+        font-size: 25px;
+        font-style: italic;
+        color: black;
+        border: 3px double #686968;
       }
     </style>
     <!-- Cargar React. -->
@@ -31,46 +72,127 @@
       src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
       crossorigin
     ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   </head>
   <body>
-    <h1>Woman in Tech</h1>
+    <!-- <h1>Woman in Tech</h1>-->
+    <center><h1>Contador</h1></center>
     <div id="app"></div>
 
-    <script type="text/javascript">
+    <script type="text/babel">
       const $app = document.getElementById("app");
-      const h = React.createElement;
+      const useState = React.useState;
+      const Avatar = ({ id, name = "👾", size }) => {
+        /* const state = useState(true);
+          const enable = state[0];
+          const setEnable = state[1];*/
 
-      const Avatar = (params) => {
-        const src = `https://randomuser.me/api/portraits/women/${params.id}.jpg`;
+        // Otra forma de hacer eso de arriba más simplre
+        const [enabled, setEnable] = useState(true);
 
-        return h("img", { src });
+        //         if (!id)
+        //           return <img scr="https://randomuser.me/api/portraits/lego/8.jpg" />;
+
+        const src = `https://randomuser.me/api/portraits/women/${id}.jpg`;
+
+        let pictureClassName = "";
+        if (size === "small") {
+          pictureClassName = "is-small";
+        } else if (size === "large") {
+          pictureClassName = "is-large";
+        }
+
+        const imgclassName = enabled ? "" : "disabled";
+
+        return (
+          <picture className={pictureClassName}>
+            {id ? (
+              <img
+                //onClick={function() setEnable(!enabled)}
+                onClick={() => {
+                  setEnable(!enabled);
+                }}
+                className={imgclassName}
+                src={src}
+              />
+            ) : (
+              <i>Sin Imagen</i>
+            )}
+
+            <strong>{enabled ? name : "Desactivada"}</strong>
+          </picture>
+        );
       };
-      ReactDOM.render(h(Avatar, { id: 47 }), $app);
 
-      /*
-          	const Avatar = params => {
-          		const src = `https://randomuser.me/api/portraits/women/${
-          			params.id
-          		}.jpg`;
+      //nombre por defecto
+      //Avatar.defaultProps = {
+      // name : "👾";
 
-          		return `
-          		<picture>
-          			<img src="${src}" />
-          			<strong><em>${params.name}</em></strong>
-          		</picture>
-					`;
-          	};
+      //};
+      function Contador() {
+        /*let contadorState = useState(0);
+        let contadorValue = contadorState[0];
+        let actulizarContador = contadorState[1];*/
 
-          	$app.innerHTML += Avatar({id: 47, name : "Andrea"});
-          	$app.innerHTML += Avatar({id: 82, name : "Sofia"});
+        //Lo mismo de las 3 lineas de arriba en 1, desestructuración
+        const [contadorValue, actulizarContador] = useState(0);
+        const [numeroVeces, actulizarVeces] = useState(0);
 
-          	$app.querySelectorAll("img").forEach(img => {
-          		img.addEventListener("click", () => {
-          			img.classList.toggle("disabled");
-          		
-          	});
+        return (
+          <div>
+            <center>
+              <span>
+                <strong>{contadorValue}</strong>
+              </span>
+              <br />
+              <br />
+              <button
+                onClick={() => {
+                  actulizarContador(contadorValue + 1);
+                  actulizarVeces(numeroVeces + 1);
+                }}
+              >
+                Incrementar
+              </button>
+              <button
+                onClick={() => {
+                  actulizarContador(contadorValue - 1);
+                  actulizarVeces(numeroVeces + 1);
+                }}
+              >
+                Decrementar{" "}
+              </button>
+              <br />
+              <p>
+                Número de Veces que se ha utilizado el contador:{" "}
+                <strong>{numeroVeces}</strong>
+              </p>
+            </center>
+          </div>
+        );
+      }
 
-       }); */
+      //ejemplo de avatar sin nombre
+      //<Avatar name="Macarena" size="large" />
+
+      /*Código para mostar los avatar
+      ReactDOM.render(
+        <div>
+          <Avatar id={47} name="Daniela" size="small" />
+          <Avatar id={82} name="Sofia" />
+          <Avatar id={28} name="Macarena" size="large" />
+        </div>,
+        $app
+      );
+    */
+
+      //Código para el contador
+      ReactDOM.render(
+        <div>
+          <Contador />
+        </div>,
+        $app
+      );
     </script>
   </body>
 </html>
